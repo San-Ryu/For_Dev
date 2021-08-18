@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
-    <wb-module deploy-name="SQL_Oracle">
+    <wb-module deploy-name="Docs_Network">
         <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
-        <property name="context-root" value="SQL_Oracle"/>
-        <property name="java-output-path" value="/SQL_Oracle/build/classes"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/Docs"/>
+        <property name="context-root" value="Docs_Network"/>
+        <property name="java-output-path" value="/Docs_Network/build/classes"/>
     </wb-module>
 </project-modules>
