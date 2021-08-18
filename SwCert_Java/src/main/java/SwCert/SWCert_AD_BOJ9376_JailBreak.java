@@ -1,5 +1,11 @@
 package SwCert;
-/*   탈옥
+
+import java.io.*;
+import java.util.*;
+
+/*   
+[BOJ9376] 탈옥
+
 [문제]
 상근이는 감옥에서 죄수 두 명을 탈옥시켜야 한다.
 이 감옥은 1층짜리 건물이고, 상근이는 방금 평면도를 얻었다.
@@ -54,8 +60,6 @@ package SwCert;
 #2 0
 #3 9
 */
-import java.io.*;
-import java.util.*;
 
 public class SWCert_AD_BOJ9376_JailBreak {
 //사이트 제출 시에는 반드시 Class명을 Main으로 지정해야함
@@ -128,7 +132,8 @@ public class SWCert_AD_BOJ9376_JailBreak {
                   if(Map[nx][ny] == '.')   qm.add(curm);
                   else if(Map[nx][ny] == '#')   qm.add(curm + 1);
                  
-                  if((curn == 1) && ())   Ans1 = curm + 1;
+                  //??
+                  //if((curn == 1))   Ans1 = curm + 1;
                }
             }
          }

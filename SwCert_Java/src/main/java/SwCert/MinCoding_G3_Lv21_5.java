@@ -1,11 +1,12 @@
 package SwCert;
-/*링크 : mir.,mincoding.co.kr/problem/G3LV21_5_
-*/
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayDeque;
+
+/*링크 : mir.,mincoding.co.kr/problem/G3LV21_5_
+*/
 
 public class MinCoding_G3_Lv21_5{
 //사이트 제출 시에는 반드시 Class명을 Main으로 지정해야함
