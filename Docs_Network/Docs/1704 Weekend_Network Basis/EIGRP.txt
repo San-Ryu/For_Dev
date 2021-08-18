@@ -1,0 +1,71 @@
+
+EIGRP
+  - 부분 업데이트
+  - 수렴 시간이 빠르다.
+  - 정상 운용중에는 적은 자원을 사용
+  - Classless Routing Protocol
+
+EIGRP Packet
+  - Hello : EIGRP를 사용하는 Router를 찾고 관계(Neighor)를 유지
+            Routing Table을 유지
+            Hello 주기 : 5초, Hold 주기 : 15초
+  - Update : Routing 정보가 있는 Packet
+             Network의 변화가 감지 되었을 때 전송
+               1. 새로운 이웃 발견 -> unicast
+               2. 네트워크 정보 변경 -> multicast(224.0.0.10)
+  - Query : 기존 네트워크 정보가 안 좋은 방향으로 변경되었을 때
+  - Reply : Query의 응답용
+  - Ack : 확인응답
+
+EIGRP Table
+  - Neighor Table : 이웃 장치들에 대한 정보
+  - Topology Table : 이웃으로 부터 학습한 모든 네트워크 정보
+                     최적 경로 정보 : Successor
+                     대체 경로 정보 : Feasible Successor
+  - Routing Table : Topology Table에서 최적에 해당하는 Routing 정보
+
+EIGRP Metric
+  - 복합 Metric : Bandwidth(대역폭), Delay(지연시간)
+                  Load(부하도), Reliablility(신뢰도), MTU(최대전송단위)
+
+EIGRP Command
+  R0> enable
+  R0# configure terminal
+  R0(config)# router eigrp <AS-Number>
+  R0(config-router)# no auto-summary
+  R0(config-router)# network <network-address> <wildcard-mask>
+
+  R0# show ip protocols
+  R0# show ip eigrp neighbors
+  R0# show ip eigrp topology
+  R0# show ip route eigrp
+  R0# show ip eigrp traffic
+
+Subnetmask			Wildcardmask
+  1 bit - Network ID		  1 bit - Host ID(Non-Check)
+  0 bit - Host ID		  0 bit - Network ID(Check)
+
+
+interface serial 0/0
+  ip address 172.16.100.1 255.255.255.0
+
+interface serial 0/1
+  ip address 172.16.101.1 255.255.255.0
+
+router eigrp 1
+  no auto-summary
+  network 172.16.100.0 0.0.0.255
+
+
+
+
+
+
+
+
+
+
+
+
+
+

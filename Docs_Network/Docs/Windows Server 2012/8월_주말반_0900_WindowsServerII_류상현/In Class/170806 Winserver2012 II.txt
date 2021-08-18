@@ -1,0 +1,35 @@
+
+
+1. 요청기간이 만료되었습니다.
+   Request Time Out.
+   상대방에게 송신은 잘 되었으나, 응답에 대한 수신이 안됨
+   - 상대방의 IP문제 또는 나의 방화벽 문제
+     (상대방의 Routing Table 점검 / Routing Service 실행 여부 확인)
+     (Bridge Adapter쪽에 Ping Test에서 문제가 생겼다면, 
+      원격 액세스 서비스 기능 사용 여부 확인, Network 카드를 사용 안함/사용 재설정
+      원격 액세스 서비스상 ARP Table의 문제일 수 있음. 원격 액세스 재시작
+      arp -d
+2. 호스트를 찾을 수 없습니다.
+   Host Unreachable
+   - Ping 명령어 상 IP 오타 또는 상대방의 IP 설정상 오류
+     (명령어 확인 / IP 설정 확인)
+3. 전송할 수 없습니다.
+   목적지까지 도달할 수 없음.
+   - 
+
+route change [Network ID] mask [Subnet] [Gateway Addr] -p
+
+=== 실습 ===
+=== 추가 ===
+route add 
+
+=== 정석적인 Static Routing ===
+마찬가지로, svr12에서 bridge Lan Card 추가 및 IP 설정
+
+svr 		>> 서비스 설치 / 원격 액세스 / 라우팅 
+		>> [route add 172.16.<Dst. Num>.0 mask 255.255.255.0 10.10.10.<Dst. Num>
+		   
+mem/cli		>> 네트워크 속성 / svr를 GW로 지정
+		   (All-Static과 달리, Dst로의 경로를 Mem / Cli에서 입력할 필요가 없음)
+		>> 이를 CMD에서 수동으로 입력하려면, 
+		   [route add 0.0.0.0 mask 0.0.0.0 172.16.<My Num>.10 -p]

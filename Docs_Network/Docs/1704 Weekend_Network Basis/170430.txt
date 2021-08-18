@@ -1,0 +1,366 @@
+
+--- ★ Router Mode -------------
+       > 셋업모드
+       # 관리자모다
+       (config)# 전역설정
+--------------------------------
+
+
+
+
+
+
+
+
+
+
+	■ RIP
+	- 거리, 방향 정보를 위주로 정보 전달
+	- 주기적 Update, 30초
+	- 부하분산(Load Balance)은 최대 6개 (Equal Cost인 경로)
+	- 최적 경로는 Distance(거리) 값을 사용
+	  동일 목적지에 대해 거리가 가장 짧은(Distance가 적은) 경로 사용
+	- Distance는 최대 15까지 사용, Distance=16은 도달할 수 없는 정보
+	- AD(Administrative Distance) 관리 거리
+	  AD = 120 (Default)
+
+	■ RIP Command
+	en
+	conf t	// "configure terminal" 전역 설정
+	ro r	// "router rip" 라우터 설정
+	ne 192.168.1.0	// "Network [Classful-Network-Addr]" 192.168.1.0이라는 Network를 광고하겠다. 
+	
+	--Tip--------------------------------------------------------------------------------------------------------------------
+	IP_Address -> 192.168.1.1
+	SubnetMask -> 255.255.255.0
+	Network Addr = 192.168.1.0
+	Classful = 192.168.1.0 (기존 Network Address를 변화 없이 사용하면 됨)
+
+	IP_Address -> 172.16.1.1
+	SubnetMask -> 255.255.255.0
+	Network Addr = 172.16.1.0
+	Classful = 172.16.0.0 (172는 기존 B 클래스이므로, B클래스에 해당하여, 두번째 옥텟까지는 그대로 적어주되, 나머지는 0으로)
+
+	IP_Address -> 10.10.10.33
+	Subnetmask -> 255.255.255.240
+	11110000
+	00100001
+	00100000
+	32
+	Network Addr = 10.10.10.32
+	Classful-Network-Addr. = 10.0.0.0 (10은 기존 A 클래스, 첫번째 옥텟까지만)
+	(A / B / C / D Class)
+	A - Network ID : 첫 8 Bit까지 (첫 옥텟 : 0 ~ 127)
+	B - Network ID : 16 Bit까지 (128 ~ 191)
+	C - Network ID : 24 Bit까지 (192 ~ 223)
+	D - 
+	-------------------------------------------------------------------------------------------------------------------------
+	no auto-s	
+	// "no auto-summary" (해당 기능을 없앰. Auto-summary는 해당 클래스의 모든 네트워크를 가지고 있다고 요약을 하게 됨.(B클래스 입력시 B클래스 전체를 전파함. 이런 불필요함을 없앰)
+	v 2	// "version 2" (RIP V1과 V2를 선택)
+
+
+================================================================================================================================
+RIP 과제 1
+	192.168.100.0/24
+	0 ~ 63
+	64 ~ 127
+	128 ~ 191
+	192 ~ 255
+
+	!-R1
+	en
+	conf ter
+	hostname R1
+	in se0/0
+	ip add 10.10.10.2 255.255.255.0
+	no sh
+	ex
+	in se0/1
+	ip ad 10.10.12.1 255.255.255.0
+	no sh
+	ex
+	
+	!-R0
+	in se0/0
+	ip add 10.10.10.1 255.255.255.0
+	en h
+	cl r 2000000
+	ban 2000
+	no sh
+	ex
+	int lo0
+	ip address 192.168.100.1 255.255.255.192
+	ex
+	in lo1
+	ip addr 192.168.100.65 255.255.255.192
+	ex
+	in lo2
+	ip addr 192.168.100.129 255.255.255.192
+	ex
+	in lo3 ip add 192.168.100.193 255.255.255.192
+	ex
+	ro r
+	ne 192.168.100.0
+	ne 10.0.0.0 (10.10.10.0 넣어도 상관 없음. 에러는 안뜸, 그러나 광고가 제대로 전달되기 하려면 Classful로 입력)
+	do show ip route rip // 확인 가능
+	--------------------------- 여기까지 하면, RIP가 R0->R1으로 전송되는 것을 확인할 수 있으나, 
+	--------------------------- R1에서 해당 메시지를 무시하는 것을 알 수 있음.
+	!-R1
+	en
+	conf ter
+	ro r
+	ne 10.0.0.0
+	do sh ip ro r // 확인 가능하나, Subnetting 등에 대한 상황이 제대로 전달이 안되는 것이 보임.
+	no auto-s
+	v 2
+	do clear ip route * // IP 환경정보를 날리는 것으로, 실전에서는 자제할 것
+	do sh ip ro r // 정보가 달라진 것을 알 수 있음
+	192.168.100.0/26 is subnetted, 4 subnets
+	R       192.168.100.64 [120/1] via 10.10.10.1, 00:00:00, Serial0/0
+	R       192.168.100.128 [120/1] via 10.10.10.1, 00:00:00, Serial0/0
+	R       192.168.100.192 [120/1] via 10.10.10.1, 00:00:00, Serial0/0
+				---①---    ----②----  ---③---
+	① 120 : AD
+	   1   : Distance -> Hop Count
+	   Metric (Best Path를 구하기 위한 척도)
+		   1. Longest Match
+		   2. AD값 (RIP : 120, EIGRP : 90, OSPF : 110, Static : Basically 1) 
+		      AD값이 낮을수록 신뢰도가 높음. AD값이 가장 낮은 것을 학습
+		   3. Metric
+	② Next Hop
+	③ 갱신시간 (RIP : 30 Sec, 초과시 어떠한 문제가 있음을 알 수 있음)
+
+	!-R2
+	hostname R2
+	int se0/1
+	ip addr 10.10.12.2 255.255.255.0
+	no sh
+	ex
+	in lo0
+	ip add 172.16.100.1 255.255.255.0
+	ex
+	in lo1
+	ip add 172.16.101.1 255.255.255.0
+	ex
+	ro r
+	no auto-s
+	v 2
+	ne 172.16.0.0
+	ne 10.0.0.0
+	ex
+	do sh ip ro r
+	192.168.100.0/26 is subnetted, 4 subnets
+	R       192.168.100.0 [120/2] via 10.10.12.1, 00:00:08, Serial0/1
+	R       192.168.100.64 [120/2] via 10.10.12.1, 00:00:08, Serial0/1
+	R       192.168.100.128 [120/2] via 10.10.12.1, 00:00:08, Serial0/1
+	R       192.168.100.192 [120/2] via 10.10.12.1, 00:00:08, Serial0/1
+				-------
+				Metric 값이 달라진 것을 알 수 있음.
+	이후,
+	do ping 192.168.100.1	// "!"는 핑 보내짐, "."는 핑 안보내짐
+	잘 되면 설정 잘 된 것
+	
+	--Tip-------------------------------------------------------------
+	Serial, Fastethernet, Loopback을 한번에 볼 수 있는 방법
+	"show ip interface brief"으로 확인 가능
+	"show running-config" // 현재 적용되어있는 설정들에 대하여 조회 가능 (RIP 등도 가능)
+	"show ip protocols" // 현재 동작중인 프로토콜에 대한 조회
+			    // 갱신주기, 송수신시 버전, 각 루프백, Auto Summary 활성 여부
+			    // Maximum Path (부하분산 거리) 등 확인 가능
+================================================================================================================================
+	■ EIGRP
+	- 주기적인 Update를 사용하지 않음
+	  (부분 업데이트, 변화가 있는 네트워크에 대해서만 Update Message 송신)
+	- 수렴 시간이 빠름
+	  (수렴시간 : 변경된 Network 정보가 EIGRP 전체 영역에 전파되고, Update를 완료하는 시간)
+	- 정상 운용중에는 적은 자원을 사용
+	- Classless 프로토콜을 사용 (Classless Routing Protocol)
+
+	EIGRP Packet
+	RIP은 업데이트를 위한 단일의 Packet을 사용
+	EIGRP는 Packet에 대한 기본적인 역할과 기능을 세분화 시킴 (총 5개의 Packet)
+		Hello	: EIGRP를 사용하는 Router를 찾고, 관계(Neighbor)를 유지하기위한 목적
+			  Routing Table을 유지
+			  Hello 주기 : 5초, 
+			  Hold 주기 : (Hello가 더이상 안 올 경우, Neighbor 관계를 유지) 15초
+		Update	: Routing 정보가 있는 Packet
+			  Network의 변화가 감지되었을 경우 전송
+			  1. 새로운 이웃을 발견 -> Unicast 통신을 통하여 추가된 이웃에게만 Update를 전송
+			  2. 네트워크의 전반적인 정보가 변경되었을 경우 -> Multicast로 모든 Neighbor에게 전송 (EIGRP 운용 Router에게만, 224.0.0.10)
+		Query	: 기존 Network 정보가 안좋은 방향으로 변경된 경우, 혹시 더 좋은 경로를 질의함 (주변 라우터가 더욱 좋은 경로 탐색하여, 더 좋은 정보를 학습)
+		Reply	: Query에 대한 응답 (더 좋은 정보가 있는 경우 / 더 좋은 정보가 없는 경우 둘 다)
+		Ack	: 확인 응답 (Update Message에 대한 확인, 더이상 Update를 보내줄 필요가 없음)
+			  RIP는 해당 기능이 없으므로, 30초 주기로 Update를 실행하는 것
+
+	EIGRP Table : 이웃들과의 관계를 저장해둔 테이블
+	- Neighbor Table : 이웃 장치들에 대한 정보를 가지고 있는 테이블
+	- Topology Table : 이웃으로부터 학습한 모든 네트워크 정보
+				 최적 경로 정보 : Successor
+				 대체 경로 정보 : Feasible Successor
+	- Routing Table : 토폴로지 Table에서 최적에 해당하는 Routing 정보만 Install 되어있는 것.
+	 			 (Topology Table에서 바로 추출하여 사용하므로, 수렴시간이 매우 빨라짐)
+
+	EIGRP Metric
+	- 복합 Metric : Bandwidth (대역폭), Delay (지연시간)
+			Load (부하), Reliability (신뢰성), MTU (최대 전송 단위)
+
+	■ EIGRP Command
+	en
+	conf t
+	router e 3 // "router eigrp <AS-Number>" 관계를 맺고 있는 Router끼리는 AS-Number가 동일해야함.
+	net 192.168.100.0 0.0.0.255 
+				// "networ <Network-Addr> <Wildcard-Mask>" 
+					Wildcard Mask는 Subnetmask와는 조금 다른 형태를 띔
+					기존 Subnetmask		Wildcardmask
+					1 - Network ID		1 - Host ID (Non-Check)
+					0 - Host ID		0 - Network ID (Check)
+
+					* 추후에 Access Control(접근제어)시 Wildcard Mask를 사용.
+						1 - (Non-Check), 0 - (Check)
+
+					RIP에서는 광고할 Network, 광고하지 않을 network를 구분할 수 없으나,
+					EIGRP에서는 Wildcard Mask를 이용하여 이를 구분, 세부적인 제어 가능.
+
+	sh ip pr // "show ip protocols"
+	sh ip e n // "show ip eigrp neighbors"
+	sh ip e to // "show ip eigrp topolpgy"
+	sh ip r e // "show ip route eigrp"
+	sh ip e tr // "show ip eigrp traffic" 트래픽을 보고, Hello, Update, Query 등의 통신량을 확인,
+					     해당 현상을 확인 가능 (Traffic이 많은건 좋지가 않으므로 조치 가능)
+
+	int ser0/0	// EIGRP 
+	ip add 172.16.100.1 255.255.255.0
+	int ser0/1
+	ip add 172.16.101.1 255.255.255.0
+
+
+================================================================================================================================
+EIGRP 과제 1
+	각 Bandwidth 계상
+	ban : 64 [kbps] => 64
+	clra : 64000 => 64000
+	ban : 1024 [kbps] => 1000
+	clra : 1024000 => 1000000
+	ban : 512 [kbps] => 500
+	clra : 512000 => 500000
+
+	!-Router0
+	en
+	conf t
+	in lo0
+	ip ad 192.168.10.1 255.255.255.0
+	in lo1
+	ip ad 192.168.11.1 255.255.255.0
+	in se0/0
+	ip ad 10.10.10.10 255.255.255.0
+	en h
+	cl ra 64000
+	ban 64
+	no sh
+	in se0/1
+	ip ad 10.10.11.10 255.255.255.0
+	en h
+	cl ra 500000
+	ban 500
+	no sh
+	ex
+	ro e 100
+	no auto-s
+	net 192.168.10.0 0.0.0.255
+	net 192.168.11.0 0.0.0.255
+	net 10.10.10.0 0.0.1.255 // 00001010 10.0
+				    00001011 11.0
+				    00000001  1.255
+				    -------
+				    10.0과 비교하여, 해당 범위에서 일치하면 광고할 예정
+	!-Router1
+	en
+	conf t
+	in lo0
+	ip ad 10.0.0.1 255.255.255.0
+	in lo1
+	ip ad 10.0.1.1 255.255.255.0
+	in se0/0
+	ip ad 10.10.10.20 255.255.255.0
+	en h
+	ban 64
+	no sh
+	in se0/1
+	ip ad 10.10.12.20 255.255.255.0
+	en h
+	cl ra 1000000
+	ban 1024
+	no sh
+	ex
+	ro e 100
+	net 10.10.10.0 0.0.1.255 // 여기서는, 어짜피 10.10.10/11/12.0 대역으로 사용중이므로, Wildcardmask를 사용하지 않아도 무관
+				 // 10.0.0.0을 Network에 입력하면, A Classful ID로 입력되므로, 무관
+	do sh ip eigrp	// 조회 가능
+		IP-EIGRP neighbors for process 100
+	H   Address         Interface      Hold Uptime    SRTT   RTO   Q   Seq
+        	                           (sec)          (ms)        Cnt  Num
+	0   10.10.10.10     Se0/0          11   00:03:30  40     1000  0   7
+				           --
+					   주기적으로 바뀜, 5초마다 Hello 하므로
+	do sh ip ro e
+		10.0.0.0/24 is subnetted, 5 subnets
+	D       10.10.11.0 [90/41024000] via 10.10.10.10, 00:04:15, Serial0/0
+	D    192.168.10.0/24 [90/40640000] via 10.10.10.10, 00:04:15, Serial0/0
+	D    192.168.11.0/24 [90/40640000] via 10.10.10.10, 00:04:15, Serial0/0
+		
+	!-Router2
+	en
+	conf t
+	in lo0
+	ip ad 172.16.10.1 255.255.255.0
+	in lo1
+	ip ad 172.16.11.1 255.255.255.0
+	in se0/0
+	ip ad 10.10.11.30 255.255.255.0
+	en h
+	ban 512
+	no sh
+	in se0/1
+	ip ad 10.10.12.30 255.255.255.0
+	en h
+	ban 1024
+	no sh
+	ex	
+	ro e 100
+	no auto-s
+	net 172.16.10.0 0.0.1.255 // 광고준비가 됨
+	do sh ip ro e
+
+
+<Bandwidth의 차이에 따른 Routing 변화>
+-----------------------------------------------------------------------
+◆ R0의 Bandwidth가 512로 설정된 경우
+Router#sh ip ro e
+     10.0.0.0/24 is subnetted, 5 subnets
+D       10.0.0.0 [90/2297856] via 10.10.10.20, 00:11:52, Serial0/0
+D       10.0.1.0 [90/2297856] via 10.10.10.20, 00:11:52, Serial0/0
+D       10.10.12.0 [90/3523840] via 10.10.10.20, 00:09:45, Serial0/0
+                   [90/3523840] via 10.10.11.30, 00:01:17, Serial0/1
+     172.16.0.0/24 is subnetted, 2 subnets
+D       172.16.10.0 [90/2297856] via 10.10.11.30, 00:01:21, Serial0/1
+D       172.16.11.0 [90/2297856] via 10.10.11.30, 00:01:21, Serial0/1
+-----------------------------------------------------------------------
+
+-----------------------------------------------------------------------
+◆ R0의 Bandwidth가 64로 설정된 경우
+Router(config)#do sh ip ro e
+     10.0.0.0/24 is subnetted, 5 subnets
+D       10.0.0.0 [90/3651840] via 10.10.11.30, 00:00:28, Serial0/1
+D       10.0.1.0 [90/3651840] via 10.10.11.30, 00:00:28, Serial0/1
+D       10.10.12.0 [90/3523840] via 10.10.11.30, 00:03:10, Serial0/1
+     172.16.0.0/24 is subnetted, 2 subnets
+D       172.16.10.0 [90/2297856] via 10.10.11.30, 00:03:13, Serial0/1
+D       172.16.11.0 [90/2297856] via 10.10.11.30, 00:03:13, Serial0/1
+-----------------------------------------------------------------------
+=> 대역폭이 더 큰 곳으로 Path를 잡게 되어있음
+	(EIGHP는 거쳐가는 네트워크에 대한 최소 Bandwidth에 대해서만 Best-Path를 결정하므로)
+	
+
+
+

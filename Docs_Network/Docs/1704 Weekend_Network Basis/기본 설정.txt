@@ -1,0 +1,29 @@
+
+!-도메인 사용 안함
+R0(config)# no ip domain-lookup
+
+!-패스워드 설정
+R0(config)# enable secret cisco
+
+!-Console Session 유지 시간(무한대)
+R0(config)# line console 0
+R0(config-line)# exec-timeout 0 0
+
+!-Console Session 유지 시간(5분 30초)
+R0(config)# line console 0
+R0(config-line)# exec-timeout 5 30
+
+
+!-Console 동기화 설정
+R0(config)# line console 0
+R0(config-line)# logging synch
+
+!-VTY(Telnet) 설정(암호 없이 접근 가능)
+R0(config)# line vty 0 4
+R0(config-line)# no password
+R0(config-line)# no login
+
+!-VTY(Telnet) 설정(암호는 cisco로 접근)
+R0(config)# line vty 0 4
+R0(config-line)# password cisco
+R0(config-line)# login

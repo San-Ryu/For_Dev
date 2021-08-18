@@ -1,0 +1,181 @@
+■ 설치 및 설정 이후 Windows Server 2012 R2 실행
+   PW설정- adds	     :	P@ssw0rdadds
+	 - client100 :	P@ssw0rd100
+	 - client200 :	P@ssw0rd200
+
+■ adds 설정
+	I) PW 설정
+	II) 우측 하단 라이트키 입력 설정 변경 (가장 우측)
+	    키보드 설정 - Host 키 조합 (Ctrl+Alt키) >> F12로 변경설정
+	    (Ctrl+Alt+Del >> F12+Del 조합으로 변경됨)
+
+	III) 내부설정
+	     로그인 후 우측 상단 "관리" >> "서버 관리자 속성" >> 부팅시 실행하지 않음으로 설정
+	     좌측 "로컬서버" >> "IE 보안 강화 구성" >> 모두 사용 안함으로 해제 (각 실습 편의를 위한 설정)
+
+		Win + R		: 실행
+		ncpa.cpl	: 네트워크 연결 어댑터
+					IPv6 사용 해제,
+					IPv4 사용 설정
+					adds :	    172.16.0.1 / 255.255.255.0
+					client100 : 172.16.0.100 / 255.255.255.0
+					client200 : 172.16.0.200 / 255.255.255.0
+
+		이후 Ping을 날리면, Request Time Out이 발생, 원인은 방화벽으로 인한 인바운드 차단.
+		이후 방화벽 설정
+
+		wf.msc		: 방화벽
+				  Windows 방화벽 속성 - 도메인 / 개인 / 공용 프로필 방화벽 모두 "사용 안 함" 설정
+
+		sysdm.cpl	: 시스템 속성
+				  도메인 : 기관, 단체, 학교 등
+				  작업그룹 : 개인
+				  각 컴퓨터 이름을 adds / client100 / client200으로 변경 (Workgroup으로 설정)
+
+	IV) OS 설치 후 해야할 것.			
+	    1. 드라이버 설치 (각 HW를 활용하기 위함.) 
+		- 가상 머신은 별도의 드라이버를 설치해주어야함. 
+		- 상단 메뉴 "장치" > "게스트 확장 CD 삽입"
+		  (Win + E >> "Virtual Box Guest Additions" >> "VBoxWindowsAdditions-amd64" 실행
+		- 설치 완료시 Reboot 후 접속 (스크롤 바 등의 불편한 기능이 사라진 것을 볼 수 있음)
+
+	    2. 윈도우 업데이트 패치 (90% 이상이 보안 패치이므로 반드시 해주어야함.)
+		- 현재 학원은, 외부와 단절된 독립망으로, 이 과정은 생략
+
+	    정상 종료 후 Virtual Box(Host) 실행,
+		"시스템" >> 부팅순서 >> 각 System별 부팅 순서 변경 (하드디스크 (1순위), 광디스크 (2순위))
+
+
+///// (Client100 / Client200 : 동일 진행) /////
+기본설정은 adds와 동일
+
+///// adds 설정 진행 /////
+VB (Host) Snapshot 실행 >> 스냅샷 만들기
+	스냅샷 이름 : 초기설치_adds / 초기설치_client100 / 초기설치_client200
+	스냅샷 설명 : OS 설치, IP 변경, Host Name 변경, 확장 CD 설치, 방화벽 해제
+
+	adds만 실행, "드래그 앤 드롭"이 제대로 작용하는지 확인
+		     "스냅샷"의 복원 기능을 확인
+
+//	2012부터는, 기존 "풀 다운 메뉴 형식"이 아닌, "어플리케이션 형식"으로 프로그램이 배치되어있음.
+"시작" >> 아래 방향으로, "관리 도구" 실행 >> "서버 관리자", "실행 역할 및 기능 추가" >> "서버 역할"의 "Active Directory Domain Service", "DNS Server" 설치 (카카오톡이라고 보면 됨)
+										     >> "기능"은 역할을 설치한 후 추가를 해야함.(카카오 페이라고 보면 됨)
+
+		* adds에 대한 설명
+		| dcpromo		: Windows Server 8까지만 적용되는 기능. 2012에서 사용 불가.
+		| (Domain Controller Promotion)
+		|
+		| Domain : Domain Controller가 설치되어있어야만 함. (Game에 Game Launcher가 있어야 하듯, Server와 연동이 되어야 함.) 
+		|	   Global Catalog에서 PC, 계정, 그룹 (다수의 사용자)를 개체 틀에 두고(가입 시키고), 제어하는 것.
+		|	   하나의 도메인에는 하나 이상의 도메인 컨트롤러가 설치되어야한다. 
+		|	   그러나, 하나의 DC는 한 서버에만 존재 가능. 다른 서버에 보조 DC를 두는 등의 방법으로 다수의 DC 사용 가능
+		|
+		| DNS Server : 이름 주소 변환, 
+
+		* Migration (DNS 서버로만 운영되던 서버에서, DC를 운영하게 될 경우, 해당 도메인에 DC로서 포함될 수 있도록 하는 기능)
+
+	>> "관리(M)" 옆 "관리센터" >> "이 서버를 도메인 컨트롤러로 승격" 메뉴가 있음을 알 수 있음. (2012 신기능) >> 클릭
+					>> 포리스트
+		* Forest? 상호 신뢰관계를 맺고있는 Domain의 집합 (계정 및 사용자들이 서로 연동(자원을 서로 공유))
+		|	PC의 모든 프로그램은 Tree 구조로 되어있음.
+		|	Root Domain : 최상위 Domain
+		|
+		|	* Trust 관계 (Multi-Domain)
+		|	* Forest-Trust 관계
+	>> "새 포리스트를 추가" >> "itbank.com"으로 FQDN 입력 >> "다음" (인터넷 상에 동일한 Domain 이름을 가지고 있는지 확인)
+		* FQDN? (Full Qualified Domain Name)
+
+	>> "Forest 기능 수준"은 최상위 버전으로 두는 것이 좋음.
+		* 그러나, 업그레이드는 쉬우나, 다운그레이드는 불가한 점이 있으므로, 
+		| 협의된 바가 없는 경우, (리더, 팀장 등의 지시가 없거나, 클라이언트의 요청이 없는 등)
+		| 무조건 낮은 버전으로 선택하고, 나중에 업그레이드를 할 것.
+
+	>> DSRM은 사용 안함 (효용도가 없는 기능임. 이거 쓸 정도면, 아예 롤백을 해버리는 단계이므로) >> P@ssw0rd로 설정
+
+	>> "권한 있는 부모 영역이 없거나 권한 있는 부모 영역에서 DNS Server가 실행되고 있지 않으므로..." >> 이건 Server II 단계에서!
+	>> NetBIOS Domain Name (네트워크 식별자) : 만든 도메인을 식별하는 이름. 변경이 가능함. 가급적 변경하지 말 것.
+						   (NetBIOS를 바꾸면, 1) 식별이 어려워짐. 
+								      2) 로그온 시 문제 발생
+
+	>> 각 저장되는 폴더 확인
+				|  Search	|  DataBase	|	
+		-------------------------------------------------
+		WorkGroup	|  직접 실시	|  각각의 SAM	|
+				|  		|(Local Account)|
+		-------------------------------------------------
+		Domain		|  ADDS		| NTDS.DIT	|
+				|		|		|
+		-------------------------------------------------
+		* SAM?
+		| "Win+E", C:\Windows\System32\config\SAM (System이 SAM을 이미 Access한 상황이므로, 열람, 변경 및 삭제 불가, 레지스트리로도 열람 불가!   
+		|	1. 구 File에 대한 BackUp File이 생성되며, BackUp File은 열람 가능
+		|	   암호화는 되어있으나, Access가 가능하므로 언젠가는 복호화 가능
+		|	2. 일반적인 방법으로 조작은 불가하나, 초기화를 시킬 수 있음. >> 쉽게 무너진다.
+		|	   (15년도 관공서 해킹 적발 사례) 
+		|	   하이렌 부트 CD (부팅 디스크 만들기)(해당 USB 등은 Linux 커널로 부팅됨. 일반 사용자가 접근 불가한 것을 사용 가능.)
+		|	   계정 모두 날려버리면, 로그인 없이 로그인 가능
+
+		* 파일 공유 예시
+		| 공유간 필요한 요소 : IP 주소, 계정
+		| 입력된 계정과 SAM 파일에 있는 계정 일치시 Access Button Token (접근권한 부여) 아니면 거부(Deny)
+
+		* AD DS (Active Directory Domain Service)
+		  
+		* NTDS.DIT (Domain 인증 완료시, Domain Server에 있는 모든 Data에 접근 가능하게 해줌 (Access Token))
+		| SAM과 동일한 이유로 취약함.
+		| IP 정보 및 PC 이름만 알아도 DB 접속 가능 (인증을 이미 받았으므로)
+		| DC가 설치된 서버에 오직 하나만 존재
+
+		>> 설치되는 정보를 확인 후 진행, Setting에 대한 오류가 예정되어있는지 확인. (초록색 체크표시 : 정상적으로 설치 가능)
+		>> 설치 진행 (자동 Reboot)
+	>> DC 설치 이후, 로그인시 NetBIOS가 추가된 것을 알 수 있다.
+		DC에는 로컬 계정을 사용할 수 없음. 지금 입력하고 들어가는 것은 WorkGroup의 Password임
+	>> dsa,msc
+		dsa.msc : "AD 사용자 및 컴퓨터" 실행, ADDS가 설치되지 않은 경우, 해당 기능 사용 불가
+		기능 좌측에 있는 폴더와 같은 항목들은 Directory와 비슷하게 생겼으나, Container라고 함.
+			Group계정 (Default 그룹, 기본 그룹으로서, 우리가 임의로 편집(이름변경 등) 및 삭제 불가.)
+			각 Container는 삭제 불가. 기본적 개체이므로 삭제를 할 수 없게 만듬.
+
+////// Client 100 //////
+	■ Member Domain 생성
+	   "시스템 속성" >> "변경" >> 도메인으로 그룹변경 후 "itbank.com"으로 설정 후 확인
+		* 로컬 시스템에 대한 DNS 서버가 구성(설정)되지 않았으므로 질의의 대상을 못찾는 것임.
+		  >> ncpa.cpl >> Network Adapter >> IPv4 >> Domain Addr, 설정 >> adds의 주소를 설정!
+	
+		  administrator // P@ssw0rdadds 입력 후 Domain 시작, 재부팅
+
+			* 계정 생성 확인
+			| adds의 AD 사용자 및 컴퓨터 >> Computers를 확인해보면 CLIENT100이 추가된 것을 확인할 수 있음.
+
+		  재부팅 이후 CLIENT100\Administrator로 바뀐 것을 볼 수 있음.
+			* Local Login
+			  현재 CLIENT100은 컴퓨터 이름이고, Administartor는 계정명으로, 
+			  이대로 P@ssw0rd100을 치고 들어가면 Domain Login이 아닌, Local Login이 진행됨
+
+			* Domain Login 방법			넷바이오스, 계정명, 도메인이름, 컴퓨터이름
+			| itbank\administrator (NetBIOS Logon : NetBIOS\Account)
+			| itbank.com\administrator (로그인은 가능하나 권장하지 않음. DomainName\Account)
+			|	(변경 수정 등을 진행할 시, 이름을 그대로 가져가버리므로, 변경 및 수정이 아닌 단순 확인의 경우, 사용해도 됨.)
+			| administrator@itbank.com (upn Logon : 도메인에서만 사용, Account@DomainName)
+
+			* Local Logon
+			| administrator (Account)
+			| client100\administrator (ComputerName\Account)
+			  
+	■ 여기까지,
+		Q1. 현재 Client100으로 접속한 계정과, Adds에서 접속된 계정은 같은 계정인가?
+		A1. 같은 계정임.
+
+		Q2. 그러면, Client100은 Domain 관리가 가능한가?
+		A2. 아직은 안됨. ADDS 설치를 안했으니까.
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
+* 여담
+| 유럽영국발 랜섬웨어, 일반 가정에도 발생중
+| 블랙체인 (비트코인)
+| 저작권 사냥 (변호사 사무실 사무장 등) 
+| 과태료 : 본래 금액의 200배, 소송비는 별도
+| IT 전문가의 필수 습관 : 확인, 저장, 백업
+
+■ 

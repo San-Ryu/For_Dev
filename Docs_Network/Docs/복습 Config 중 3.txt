@@ -1,0 +1,179 @@
+<°øÅë>
+en
+conf t
+no ip domain loo
+enable secret ccna123
+lin con 0
+ exec-time 0 0
+ logging syn 
+ password cisco123
+ login
+exit
+
+<1F_SW/2F_SW>
+conf t
+vlan 100
+ name Sales
+vlan 200
+ name MGR
+vlan 300
+ name Admin
+exit
+
+int fa 0/1
+ desc ##Sales_User_PC##
+ switchport mode access 
+ switchport access vlan 100
+!
+int fa 0/2
+ desc ##MGR_User_PC##
+ switchport mode access
+ switchport access vlan 200
+!
+int fa 0/24
+ desc ##Trunk_Port##
+ switchport trunk allowed vlan 100,200,300
+ switchport trunk native vlan 300
+ switchport mode trunk
+ switchport nonegotiate
+!
+
+<BB>
+ho BB
+vlan 100
+ name Sales
+vlan 200
+ name MGR
+vlan 300
+ name Admin
+exit
+
+int range fa 0/1 - 2
+ switchport trunk allowed vlan 100,200,300
+ switchport trunk native vlan 300
+ switchport mode trunk
+ switchport nonegotiate
+!
+
+<1F_SW>
+conf t
+ho 1F_SW
+
+<2F_SW>
+conf t
+ho 2F_SW
+
+int fa 0/3 
+ sw mo acc
+ sw acc vlan 300
+!
+============================================
+<Router>
+en
+conf t
+ho GW
+no ip domain loo
+enable secret ccna123
+lin con 0
+ exec-time 0 0
+ logging syn 
+ password cisco123
+ login
+exit
+
+int fa 0/0
+ ip add 10.10.100.254 255.255.255.0
+ no shut
+!
+int fa 0/1
+ ip add 10.10.200.254 255.255.255.0
+ no shut
+!
+
+<BB>
+conf t
+int fa 0/23
+ sw mo acc
+ sw acc vlan 100
+!
+int fa 0/24
+ sw mo acc
+ sw acc vlan 200
+!
+============================================
+<Router>
+en
+conf t
+ho GW
+no ip domain loo
+enable secret ccna123
+lin con 0
+ exec-time 0 0
+ logging syn 
+ password cisco123
+ login
+exit
+
+int fa 0/0
+ no shut
+!
+int fa 0/0.100
+ encapsulation dot1q 100
+ ip add 10.10.100.254 255.255.255.0
+!
+int fa 0/0.200
+ encapsulation dot1q 200
+ ip add 10.10.200.254 255.255.255.0
+!
+int fa 0/0.300
+ encapsulation dot1q 300 native
+ ip add 10.10.30.254 255.255.255.0
+!
+
+<BB>
+conf t
+int fa 0/20
+ sw trunk allowed vlan 100,200,300
+ sw trunk native vlan 300
+ sw mode trunk
+!
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

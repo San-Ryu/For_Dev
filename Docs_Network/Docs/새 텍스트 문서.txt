@@ -1,0 +1,37 @@
+SVI (
+
+
+1) L2 Switch
+   => Management 용도 (Telnet / SSH / Sysloc / SNMP / NTP 등...)
+                       원격 Terminal  시스템로그      타임서버
+   => 실 장비 L2 Switch에서 다수의 SVI를 생성할 경우,
+      실제로 활성화되는 것은 마지막에 생성된 Interface뿐이다.
+      나머지는 Shutdown 상태가 된다.
+
+2) L3 Switch
+   => Management 용도
+   => Gateway 용도
+   => Routing 용도
+   => L2 Switch와 다르게, 다수의 SVI를 동시에 사용하는 것이 가능.
+
+
+SVI 활성화(Up/Up)를 위한 조건
+- SVI로 사용하는 VLAN 이 VLAN Database에 생성되어있어야한다.
+  ([sh vl b]로 확인 가능)
+- 해당 VLAN이 통과할 수 있는 Access 또는 Trunk Port가 존재해야한다.
+  ([sh int tr / sh int ac]로 확인 가능)
+=== SVI 실습 ===
+
+SVI 900
+1F : 1.1.90.1/24
+2F : 1.1.90.2/24
+3F : 1.1.90.3/24
+
+VLAN 900과는 별도이며, 이를 관리하기 위한 목적이 있으므로, 관리목적의 IP가 별도로 주어진다
+
+<1F_Sw>
+conf t
+int vlan 900
+ip add 1.1.90.1 255.255.255.0
+=> 이는 Loopback과 동일하게, [no sh] 명령어를 입력하지 않아도 됨.
+   단, VLAN 1을 SVI로 사용하는 경우, 반드시 [no sh] 명령어가 필요하다.)
