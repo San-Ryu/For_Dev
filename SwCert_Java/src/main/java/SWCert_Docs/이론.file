@@ -1,0 +1,77 @@
+Java I/O 媛쒕뀗
+
+�옄諛붿뿉�꽌�뒗 �븯�뱶�썾�뼱, �몴以� 肄섏넄, �꽕�듃�썙�겕 �벑怨� Stram(1 Byte)�쓽 �뜲�씠�꽣瑜� �씫怨� �벐嫄곕굹, 臾몄옄 (2 Byte)瑜� �씫怨� �벐�뒗 寃껋씠 媛��뒫.
+ 
+> Stream
+�엯異쒕젰 �옣移섏뿉 �쓽�븳 �뜲�씠�꽣�쓽 �쓲由�
+
+> Source
+�엯�젰 �뜲�씠�꽣�쓽 �떆�옉
+
+> Sink
+�뜲�씠�꽣媛� 泥섎━�릺�뼱 異쒕젰�릺�뒗 �걹
+
+> Node
+Source��  Sink
+
+�븣怨좊━利섏쓣 �쐞�븳 Java I/O
+Java I/O 媛쒕뀗
+Java.io �뙣�궎吏��뿉 援ы쁽�릺�뼱 �엳�떎.
+
+Java I/O 媛쒕뀗
+File Class : File�뿉 ���븳 �젙蹂대�� �젣怨듯븳�떎.
+** File Name �젙蹂�
+String getName() : file �씠由� 媛��졇�삤湲�
+String getPath() : Path �씠由� 媛��졇�삤湲�
+String getAbsolutePath() : �젅�� Path �씠由� 媛��졇�삤湲�
+String getParent() : Parent Directory �씠由� 媛��졇�삤湲�
+boolean renameTo(File newName) : �떎瑜� �씠由꾩쑝濡� 諛붽씀湲�
+
+** File Testing
+boolean exists(): 議댁옱�븯�뒗吏� �솗�씤
+boolean canWrite() : �벝 �닔 �엳�뒗吏� �솗�씤
+boolean canRead() : �씫�쓣 �닔 �엳�뒗吏� �솗�씤
+boolean isFile() : File�씤吏� �솗�씤
+boolean isDirectory : Directory�씤吏� �솗�씤
+
+> Stream
+> Source
+> Sink
+> Node
+
+Key, File, Board Network >> Java Program >> Java Program
+
+
+					Source Stream		Sink Stream
+Byte Stream			InputStream			OutputStream
+					FileInputStream		FileOutputStream
+Character Stream	Reader				Writer
+					FileReader			FileWriter
+					
+InputStream
+	int read()
+	int read(byte[] buf)
+	int read(byte[] buf, int offset, int length)
+OutStream
+	void write(int c)
+	void write(byte[] buf)
+	void write(byte[] buf, int offset, int length)
+	
+** Directory �젙蹂�
+boolean mkdir() : Sub Directory �깮�꽦
+String[] list() : �쁽�옱 Directory�뿉 �엳�뒗 �쟾泥� file list瑜� return
+
+** 洹몄쇅�쓽 硫붿냼�뱶
+long lastModified() : 留덉�留� �닔�젙�맂 �궇吏�
+long length() : �겕湲� �븣�젮二쇨린
+boolean delete() : �궘�젣�븯湲�
+
+
+
+	
+
+
+
+
+
+
