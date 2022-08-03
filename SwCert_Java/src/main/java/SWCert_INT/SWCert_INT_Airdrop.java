@@ -1,7 +1,3 @@
-package SWCert_INT;
-
-import java.util.Scanner;
-import java.io.FileInputStream;
 /*	물자지원
  
 [문제]
@@ -44,6 +40,11 @@ R은 1000 이하의 자연수이다.
 #2 0
 #3 1
 */
+package SWCert_INT;
+
+import java.util.Scanner;
+import java.io.FileInputStream;
+
 public class SWCert_INT_Airdrop {
 //사이트 제출 시에는 반드시 Class명을 Main으로 지정해야함
 //public class Main{
