@@ -1,0 +1,79 @@
+import java.util.Scanner;
+ 
+public class Solution {
+    //4008. [모의 SW 역량테스트] 숫자 만들기 
+ 
+     
+    static int[] arr, cal;
+    static int N;
+    static int max,min;
+ 
+    public static void main(String[] args){
+         
+        Scanner sc = new Scanner(System.in);
+         
+        int T;
+        T = sc.nextInt();
+         
+        for(int test_case = 1; test_case <= T; test_case++)
+        {
+             
+            N = sc.nextInt();
+             
+            cal = new int[4];
+            arr = new int[N];           
+             
+            for(int i = 0; i < 4; i++) 
+                cal[i] = sc.nextInt();
+             
+            for(int i = 0; i < N; i++) 
+                arr[i] = sc.nextInt();
+             
+            max = Integer.MIN_VALUE; 
+            min = Integer.MAX_VALUE;
+             
+            solve(cal[0],cal[1],cal[2],cal[3],arr[0],1);
+             
+            System.out.println("# "+test_case+" "+(max - min));
+ 
+        }
+         
+        sc.close();
+ 
+    }
+     
+    public static void solve(int plus, int minus, int multi , int div, int sum, int depth) {
+         
+        if(depth == N)
+        {
+            max = Math.max(max,sum);
+            min = Math.min(min,sum);
+             
+            return;
+        }
+         
+        for(int i = 0; i < 4; i++)
+        {
+            switch(i){
+ 
+            case 0:
+                if(plus > 0) solve(plus-1,minus,multi,div,sum+arr[depth],depth+1);
+                break;
+         
+            case 1:
+                if(minus > 0) solve(plus,minus-1,multi,div,sum-arr[depth],depth+1);
+                    break;
+                 
+            case 2:
+                if(multi > 0) solve(plus,minus,multi-1,div,sum*arr[depth],depth+1);
+                    break;
+             
+            case 3:
+                if(div > 0) solve(plus,minus,multi,div-1,sum/arr[depth],depth+1);
+                    break;
+                 
+            }
+        }
+    }
+ 
+}
