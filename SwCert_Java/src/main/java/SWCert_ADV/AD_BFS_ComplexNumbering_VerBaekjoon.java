@@ -76,8 +76,7 @@ public class AD_BFS_ComplexNumbering_VerBaekjoon {
 		}
 	}
 	
-	public static void main(String args[]) throws Exceptions{
-	}
+	public static void main(String args[]) throws Exception{
 		System.setIn(new FileInputStream("Input (AD_Complex).txt"));
 		Scanner sc = new Scanner(System.in);
 		
