@@ -62,19 +62,19 @@ import java.io.*;
 import java.util.*;
 
 public class AD_EX181213_ChainExplosion {
-	static int N, M;	//	諛곗�댁�� �� 蹂� N, ��諛� �������� 媛��� M
-	// static int X[], Y[];	//	��諛� �������� X, Y	(�ъ�⑺��吏� ��怨�, ArrayList濡� ��泥댄��)
-	static int Map[][];	//	留� ��蹂� (諛곗��� ������ ������)
-	static int AnsN;	//	寃곌낵媛�
+	static int N, M;	//	배열의 한 변 N, 폭발 시작점의 개수 M
+	// static int X[], Y[];	//	폭발 시작점의 X, Y	(사용하지 않고, ArrayList로 대체함)
+	static int Map[][];	//	맵 정보 (배치된 폭탄의 도화선)
+	static int AnsN;	//	결과값
 	
-	static int Stat[][];	//	��諛� ������ ���� Visited
-	static int SumTime, SumRemain;	//	�곗�� ��諛��� ��媛�, �곗�� ��諛� �댄���� �쇱�� ����(諛� ��諛� 醫�猷�)
+	static int Stat[][];	//	폭발 시점을 위한 Visited
+	static int SumTime, SumRemain;	//	연쇄 폭발의 시간, 연쇄 폭발 이후의 일제 점화(및 폭발 종료)
 	
-	static int dx[] = {-1, 0, 0, 1};	//	�щ갑���� 諛곗�� X
-	static int dy[] = {0, -1, 1, 0};	//	�щ갑���� 諛곗�� Y
+	static int dx[] = {-1, 0, 0, 1};	//	사방탐색 배열 X
+	static int dy[] = {0, -1, 1, 0};	//	사방탐색 배열 Y
 	
-	static ArrayList<Integer> arrx;	//	��諛� ������ ������ X醫���
-	static ArrayList<Integer> arry;	//	��諛� ������ ������ X醫���
+	static ArrayList<Integer> arrx;	//	폭발 예정인 폭탄의 X좌표
+	static ArrayList<Integer> arry;	//	폭발 예정인 폭탄의 X좌표
 	public static void main(String args[]) throws Exception{
 		System.setIn(new FileInputStream("Input (AD_EX181213_ChainExplosion).txt"));
 		Scanner sc = new Scanner(System.in);
@@ -92,17 +92,17 @@ public class AD_EX181213_ChainExplosion {
 			Stat = new int[10][10];
 			arrx = new ArrayList<>();
 			arry = new ArrayList<>();
-			//	Caution : 臾몄�������� (1, 1) ~ (N, N)�� 醫���怨�瑜� ���ν���쇰��,
-			//			  (0, 0) ~ (N - 1, N - 1) 醫���怨�媛� �듭������ 蹂�寃쏀���� �ъ�⑸��
-			//			   ����, 臾몄�������� 諛곗�댁�� Map[Y][X] 醫���怨�瑜� �ъ�⑺���쇰��,
-			//			  Map[X][Y] 醫���怨�媛� �듭������ 蹂�寃쏀���� �ъ�⑸��.
+			//	Caution : 문제에서는 (1, 1) ~ (N, N)의 좌표계를 입력했으나,
+			//			  (0, 0) ~ (N - 1, N - 1) 좌표계가 익숙하여 변경하여 사용됨
+			//			   또한, 문제에서는 배열상 Map[Y][X] 좌표계를 사용했으나,
+			//			  Map[X][Y] 좌표계가 익숙하여 변경하여 사용됨.
 			for(int i = 0; i < M; i++) {
 //				X[i] = sc.nextInt();
 //				Y[i] = sc.nextInt();
 				
 				int tmpx = sc.nextInt() - 1;
 				int tmpy = sc.nextInt() - 1;
-				//	(N - 1) 醫���怨�濡� 蹂���
+				//	(N - 1) 좌표계로 변환
 				arrx.add(tmpx);
 				arry.add(tmpy);
 				Stat[tmpx][tmpy] = 1;
@@ -124,7 +124,7 @@ public class AD_EX181213_ChainExplosion {
 		//	Ipt.
 			
 			while(!(arrx.isEmpty() && arry.isEmpty())) {
-				//	��諛� 醫�猷� ������ �곕�� ���� (��諛�臾쇱�� "�곗�" ������ �곕�� ���ы���듬����.)
+				//	폭발 종료 시점에 따라 정렬 (폭발물이 "터질" 시점에 따라 정렬했습니다.)
 				for(int i = 0; i < M; i++) {
 					for(int j = 1; j < M; j++) {
 						if(Stat[arrx.get(i)][arry.get(i)] < Stat[arrx.get(j)][arry.get(j)]);
@@ -137,31 +137,31 @@ public class AD_EX181213_ChainExplosion {
 						arry.set(j, tmpy);
 					}
 				}
-				//	��諛� 醫�猷� ������ �곕�� ����
+				//	폭발 종료 시점에 따라 정렬
 
 				int tmp = arrx.size();
 				for(int i = 0; i < tmp; i++) {
-					//	湲곗� 醫��� ����
+					//	기준 좌표 입력
 					int cx = arrx.get(i);
 					arrx.remove(i);
 					int cy = arry.get(i);
 					arry.remove(i);
 					
-					//	ArrayList�� Element�ㅼ�� ������留��쇰� �ъ�⑺��湲� ����.
+					//	ArrayList의 Element들을 원하는만큼만 사용하기 위함.
 					i--;
 					tmp--;
 					
 					for(int j = 0; j < dx.length; j++) {
-						//	���� 醫��� ����
+						//	탐색 좌표 입력
 						int nx = cx + dx[j];
 						int ny = cy + dy[j];
 						
-						//	留� 諛��쇰� 踰��대���� 寃쎌�� ����
+						//	맵 밖으로 벗어나는 경우 제외
 						if(nx < 0 || (N - 1) < nx || ny < 0 || (N - 1) < ny)	continue;
-						//	��諛�臾쇱�� ���� 寃쎌�� ����
+						//	폭발물이 없는 경우 제외
 						if(Map[nx][ny] == 0)	continue;
 						
-						if(Stat[nx][ny] == 0) {	//	理�珥� 諛⑸Ц�� 寃쎌��
+						if(Stat[nx][ny] == 0) {	//	최초 방문인 경우
 							Stat[nx][ny] = Stat[cx][cy] + Map[nx][ny];
 							arrx.add(nx);
 							arry.add(ny);
@@ -184,7 +184,7 @@ public class AD_EX181213_ChainExplosion {
 			
 			for(int i = 0; i < N; i++) {
 				for(int j = 0; j < N; j++) {
-					if(Stat[i][j] != 0) {	//	��諛��� ��諛�臾�
+					if(Stat[i][j] != 0) {	//	폭발한 폭발물
 						SumTime = Math.max(SumTime, Stat[i][j]);
 					}
 				}
@@ -192,7 +192,7 @@ public class AD_EX181213_ChainExplosion {
 			
 			for(int i = 0; i < N; i++) {
 				for(int j = 0; j < N; j++) {
-					if((Stat[i][j] == 0) && (Map[i][j] != 0)) {	//	��諛���吏� ���� ��諛�臾�
+					if((Stat[i][j] == 0) && (Map[i][j] != 0)) {	//	폭발하지 않은 폭발물
 						SumRemain = Math.max(SumRemain, Map[i][j]);
 					}
 				}

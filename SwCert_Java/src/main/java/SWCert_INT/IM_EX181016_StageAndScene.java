@@ -59,74 +59,74 @@ public class IM_EX181016_StageAndScene {
 	static int Ans;
 	
 	public static void main(String args[]) throws Exception{
-  System.setIn(new FileInputStream("D:\\Redan_Workspace\\SWCert_Src\\Input (IM_EX181016_StageAndScene).txt"));
-  BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-  StringTokenizer st = null;
-  
-  st = new StringTokenizer(br.readLine());
-  int T = Integer.parseInt(st.nextToken());
-  for(int tc = 1; tc <= T; tc++) {
-  //	Ipt
-  st = new StringTokenizer(br.readLine());
-  N = Integer.parseInt(st.nextToken());
-  M = Integer.parseInt(st.nextToken());
-  Trans = Integer.parseInt(st.nextToken());
-  Play = Integer.parseInt(st.nextToken());
-  Ans = 0;
-  
-  Stage = new int[N];
-  st = new StringTokenizer(br.readLine());
-  for(int i = 0; i < N; i++) {
-  Stage[i] = Integer.parseInt(st.nextToken());
-  }
-  
-  Queue<Integer> q = new LinkedList<>();
-  st = new StringTokenizer(br.readLine());
-  for(int i = 0; i < M; i++) {
-  int tmp = Integer.parseInt(st.nextToken());
-  q.add(tmp);
-  }
-  //	Ipt
-  
-  //	Oper
-  int tmp;
-  int Stage2[] = new int[N];
-  for(int i = 0; i < M; i++) {
-  Stage2[q.peek() - 1] = i + 1;
-  q.poll();
-  q.add(Stage2[q.peek()]);
-  }
-  
-  for(int i = 1; i <= N; i++) {
-  if(Scene[i] == Stage2[1]) {
-  Ans+= Play;
-  }
-  else {
-  while(Scene[i] == Stage2[1]) {
-  tmp = Stage2[1];
-  for(int j = 0; j < M; j++) {
-  Stage2[j] = Stage2[j + 1];
-  }
-  Stage2[M - 1] = tmp;
-  Ans+= Trans;
-  
-  if(Scene[i] == Stage[1]) {
-  Ans+= Play;
-  break;
-  }
-  }
-  }
-  }
-  //	Oper
-  
-  //	Opt
-  System.out.println(q.toString());
-  for(int i = 0; i < M; i++) {
-  System.out.print(Stage2[i]);
-  }
-  System.out.println();
-  System.out.println("#" + tc + " " + Ans);
-  //	Opt
-  }	//	End Test Case
+		System.setIn(new FileInputStream("D:\\Redan_Workspace\\SWCert_Src\\Input (IM_EX181016_StageAndScene).txt"));
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = null;
+		
+		st = new StringTokenizer(br.readLine());
+		int T = Integer.parseInt(st.nextToken());
+		for(int tc = 1; tc <= T; tc++) {
+		//	Ipt
+			st = new StringTokenizer(br.readLine());
+			N = Integer.parseInt(st.nextToken());
+			M = Integer.parseInt(st.nextToken());
+			Trans = Integer.parseInt(st.nextToken());
+			Play = Integer.parseInt(st.nextToken());
+			Ans = 0;
+			
+			Stage = new int[N];
+			st = new StringTokenizer(br.readLine());
+			for(int i = 0; i < N; i++) {
+				Stage[i] = Integer.parseInt(st.nextToken());
+			}
+			
+			Queue<Integer> q = new LinkedList<>();
+			st = new StringTokenizer(br.readLine());
+			for(int i = 0; i < M; i++) {
+				int tmp = Integer.parseInt(st.nextToken());
+				q.add(tmp);
+			}
+		//	Ipt
+			
+		//	Oper
+			int tmp;
+			int Stage2[] = new int[N];
+			for(int i = 0; i < M; i++) {
+				Stage2[q.peek() - 1] = i + 1;
+				q.poll();
+				q.add(Stage2[q.peek()]);
+			}
+			
+			for(int i = 1; i <= N; i++) {
+				if(Scene[i] == Stage2[1]) {
+					Ans+= Play;
+				}
+				else {
+					while(Scene[i] == Stage2[1]) {
+						tmp = Stage2[1];
+						for(int j = 0; j < M; j++) {
+							Stage2[j] = Stage2[j + 1];
+						}
+						Stage2[M - 1] = tmp;
+						Ans+= Trans;
+						
+						if(Scene[i] == Stage[1]) {
+							Ans+= Play;
+							break;
+						}
+					}
+				}
+			}
+		//	Oper
+			
+		//	Opt
+			System.out.println(q.toString());
+			for(int i = 0; i < M; i++) {
+				System.out.print(Stage2[i]);
+			}
+			System.out.println();
+			System.out.println("#" + tc + " " + Ans);
+		//	Opt
+		}	//	End Test Case
 	}	//	End Main
 }	//	End Class
