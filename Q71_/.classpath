@@ -6,7 +6,27 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="D:/WS/WS_Eclipse/json-simple-1.1.1.jar">
+	<classpathentry kind="lib" path="D:/WS/WS_Eclipse/__External Library/json-simple-1.1.1.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="D:/WS/WS_Eclipse/__External Library/poi-4.1.2/poi-4.1.2.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="D:/WS/WS_Eclipse/__External Library/poi-4.1.2/poi-excelant-4.1.2.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="D:/WS/WS_Eclipse/__External Library/poi-4.1.2/poi-ooxml-4.1.2.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="D:/WS/WS_Eclipse/__External Library/poi-4.1.2/poi-ooxml-schemas-4.1.2.jar">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
