@@ -9,7 +9,7 @@ import java.util.Scanner;
  * <입력1 (sc.nextLine()으로 개행 처리 안할 경우)>			
  * 1	hi
  * 
- *  <입력2 (sc.nextLine()으로 개행 처리 해준 경우)>
+ * <입력2 (sc.nextLine()으로 개행 처리 해준 경우)>
  * 1
  * hi
  * 		
