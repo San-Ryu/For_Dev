@@ -41,9 +41,7 @@ public class Java002_dataType {
 		 * 'A' => 65
 		 * 'a' => 97
 		 * 'o' => 48
-		 */
-		
-		
+		 */	
 		
 	}//end main()
 
