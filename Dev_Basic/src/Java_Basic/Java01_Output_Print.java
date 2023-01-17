@@ -11,5 +11,6 @@ public class Java01_Output_Print {
 		System.out.print("Hello");
 		System.out.printf("Hello");
 		System.out.println("Hello");
+		// 전체 출력 값의 끝에 println의 개행이 포함되어있는 것을 볼 수 있다. 
 	}
 }

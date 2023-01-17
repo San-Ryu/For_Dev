@@ -1,2 +1,0 @@
-module SS_JavaProgramming {
-}
