@@ -15,7 +15,7 @@ import java.util.Scanner;
  * 		
  * <출력> (의도)
  * 1
- * hi			
+ * hi		 	
  * 
  * 하지만, sc.nextLine();
  * 부분이 누락될 경우,
