@@ -53,7 +53,7 @@ public class SWCert_INT_Airdrop {
 	static int AnsN;
 	
 	public static void main(String args[]) throws Exception{
-		System.setIn(new FileInputStream("D:\\Redan_Workspace\\SWCert_Src\\Input (Airdrop).txt"));
+		System.setIn(new FileInputStream("D:\\WS_Eclipse\\SwCert_Java\\src\\main\\java\\SWCert_INT\\Input (IM_Airdrop).txt"));
 		Scanner sc = new Scanner(System.in);
 		
 		T = sc.nextInt();

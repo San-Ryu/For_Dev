@@ -50,7 +50,7 @@ public class AD_BFS_ComplexNumbering_VerBaekjoon {
 	}	//	End Class st
 	
 	public class Main{
-		public static final int[] dx = {0, 0, 1, -1};
+		public final int[] dx = {0, 0, 1, -1};
 		public static final int[] dy = {1, -1, 0, 0};
 		public void BFS(int[][] a, int[][] group, int x, int y, int cnt, int n) {
 			Queue<Pair> q = new LinkedList<Pair>();
