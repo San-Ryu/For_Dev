@@ -27,8 +27,114 @@
 [출력 예시]
 6
  */
+
+/*
+백준 2011번 암호코드 문제는 DP(Dynamic Programming) 알고리즘을 사용하여 풀 수 있는 문제입니다.
+
+문제 설명:
+
+문자열 s는 "0"~"9"의 숫자로 구성된 암호입니다.
+s[0]~s[i-1]까지의 부분 문자열에서 마지막 두 자리만을 사용하여 만들 수 있는 부분 문자열의 개수를 구하는 문제입니다.
+각 부분 문자열의 값은 10이상이고, 99이하여야 합니다.
+예시:
+
+s = "1234"일 경우, 12, 23, 34의 부분 문자열을 만들 수 있으므로 결과는 3입니다.
+솔루션:
+
+1. 
+dp 배열 선언 및 초기화
+dp[0] = 1
+
+2. 
+s[i-1]까지의 부분 문자열에서 마지막 두 자리만을 사용하여 만들 수 있는 부분 문자열의 개수 구하기
+for (int i = 1; i <= n; i++) {
+int x = s[i-1]-'0';
+if (x >= 1 && x <= 9) dp[i] += dp[i-1];
+if (i == 1) continue;
+int y = (s[i-2]-'0')*10 + x;
+if (y >= 10 && y <= 26) dp[i] += dp[i-2];
+}
+
+3. 
+dp[n]을 출력하면 결과가 나옵니다.
+
+<C++>
+#include<bits/stdc++.h>
+using namespace std;
+string s;
+int dp[5001];
+int main() {
+    cin >> s;
+    int n = s.size();
+    dp[0] = 1;
+    for (int i = 1; i <= n; i++) {
+        int x = s[i-1]-'0';
+        if (x >= 1 && x <= 9) dp[i] += dp[i-1];
+        if (i == 1) continue;
+        int y = (s[i-2]-'0')*10 + x;
+        if (y >= 10 && y <= 26) dp[i] += dp[i-2];
+    }
+    cout << dp[n] << endl;
+    return 0;
+}
+
+먼저 dp[0] = 1이 초기화되어 있습니다. 이는 s[0]~s[0]까지의 부분 문자열에서 마지막 두 자리만을 사용하여 만들 수 있는 부분 문자열의 개수를 의미합니다.
+for문에서 i = 1부터 n까지 순회하면서 s[i-1]까지의 부분 문자열에서 마지막 두 자리만을 사용하여 만들 수 있는 부분 문자열의 개수를 구합니다.
+int x = s[i-1]-'0'는 s[i-1]의 숫자 형식으로 변환하는 과정입니다. 예를 들어 s[i-1] = '2'일 경우, x = 2로 변환됩니다.
+if (x >= 1 && x <= 9) dp[i] += dp[i-1]은 s[i-1]이 1~9사이일 경우에만 가능한 경우입니다. 그래서 dp[i-1]을 더해줘야 합니다.
+만약 s[i-1]이 0이라면 dp[i-1]은 더하지 않아야 합니다.
+그 다음, int y = (s[i-2]-'0')*10 + x는 s[i-2]과 s[i-1]을 합쳐 한 자리 수로 만드는 과정입니다. 예를 들어 s[i-2] = '2', s[i-1] = '3'일 경우, y = 23로 변환됩니다.
+if (y >= 10 && y <= 26) dp[i] += dp[i-2]는 y가 10~26사이일 경우에만 가능한 경우입니다. 그래서 dp[i-2]를 더해줘야 합니다.
+마지막으로, cout << dp[n] << endl은 s[0]~s[n-1]까지의 부분 문자열에서 마지막 두 자리만을 사용하여 만들 수 있는 부분 문자열의 개수를 출력합니다.
+
+<C#>
+using System;
+
+namespace Main {
+	class Program {
+		static void Main(string[] args) {
+			string s = Console.ReadLine();
+			int n = s.Length;
+			int[] dp = new int[n+1];
+			dp[0] = 1;
+			
+			for (int i = 1; i <= n; i++) {
+				int x = s[i-1] - '0';
+				if (x >= 1 && x <= 9) dp[i] += dp[i-1];
+				
+				if (i >= 2) {
+					int y = (s[i-2] - '0') * 10 + x;
+					if (y >= 10 && y <= 26) dp[i] += dp[i-2];
+				}
+			}
+			
+			Console.WriteLine(dp[n]);
+		}
+	}
+}
+ */
 package SWCert_PRO;
 
-public class Prg_Pro_B2011_DP_Password {
+import java.util.Scanner;
 
+public class Prg_Pro_B2011_DP_Password {
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		String s = sc.nextLine();
+		int n = s.length();
+		int[] dp = new int[n + 1];
+		dp[0] = 1;
+		
+		for (int i = 1; i <= n; i++) {
+			int x = s.charAt(i - 1) - '0';
+			if (x >= 1 && x <= 9) dp[i] += dp[i - 1];
+			
+			if (i >= 2) {
+				int y = (s.charAt(i - 2) - '0') * 10 + x;
+				if (y >= 10 && y <= 26) dp[i] += dp[i - 2];
+			}
+		}
+		
+		System.out.println(dp[n]);
+	}
 }
