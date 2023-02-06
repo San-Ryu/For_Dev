@@ -72,7 +72,6 @@ CONSTRAINT TEAM_HISTORY_PK PRIMARY KEY (TEAM_ID, YYYY, SEQ)
 );
 
 
-
 -------------------------------------------------------------------------
 -- insert_stadium 
 -------------------------------------------------------------------------
@@ -95,6 +94,7 @@ INSERT INTO stadium VALUES ('C05','창원구장','','','경남 창원시','','');
 INSERT INTO stadium VALUES ('D02','전주구장','','','전북 전주시','','');         
 INSERT INTO stadium VALUES ('E02','대전월드컵구장','',41000,'대전광역시 유성구 노은동 270번지','','');                                                         
 INSERT INTO stadium VALUES ('A01','서울 월드컵경기장','',63930,'','','');      
+
 
 -------------------------------------------------------------------------
 --  inserteam.sql  
@@ -131,6 +131,7 @@ INSERT INTO team VALUES ('K05','전북','현대모터스','CHUNBUK HYUNDAI MOTORS','199
 INSERT INTO team VALUES ('K03','포항','스틸러스','POHANG STEELERS','1973','C06','790','050',
 '경북 포항시 죽도동 645-1 삼일 B/D 6층','54','282-2002','282-5955','http://www.steelers.co.kr','');                                               
  
+
 -------------------------------------------------------------------------
 --  insert_schedule.sql  
 -------------------------------------------------------------------------
@@ -315,9 +316,13 @@ INSERT INTO schedule VALUES ('S','B02','20020904','K08','K09','1','0');
 INSERT INTO schedule VALUES ('S','C05','20020904','K01','K04','2','2');       
 INSERT INTO schedule VALUES ('S','C06','20020904','K03','K10','0','0');       
 INSERT INTO schedule VALUES ('S','C02','20020904','K06','K07','2','2');       
------------
-----------insert player
---------------------
+
+
+-------------------
+--insert player
+-------------------
+
+
 INSERT INTO player VALUES ('1999174','우르모브','K06','','','1999','DF','4','유고',TO_DATE('30-08-1977','dd-mm-yyyy'),'1','180','70');                         
 INSERT INTO player VALUES ('1997188','윤희준','K06','','','1995','DF','15','',TO_DATE('01-11-1972','dd-mm-yyyy'),'1','180','74');                               
 INSERT INTO player VALUES ('2002073','이규호','K06','','','2001','DF','23','',TO_DATE('13-07-1979','dd-mm-yyyy'),'1','177','72');                               
@@ -786,7 +791,9 @@ INSERT INTO player VALUES ('2001070','오규찬','K02','OH, GUCHAN','','','MF','24'
 INSERT INTO player VALUES ('2002135','윤원일','K02','','','','MF','45','',TO_DATE('31-03-1983','dd-mm-yyyy'),'1','176','70');                                   
 INSERT INTO player VALUES ('1999131','이동욱','K02','LEE, DONGWOOK','','','MF','40','',TO_DATE('10-04-1976','dd-mm-yyyy'),'1','176','68');                      
  
+
 ----------------------
+
 
 DROP TABLE EMP;
 DROP TABLE DEPT;
