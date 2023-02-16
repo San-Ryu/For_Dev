@@ -30,11 +30,17 @@ public class Java_0301_dataType {
 		double num=4.5;
 		//캐스팅 타입선언 : 명시적 형변환
 		int x=(int)num;
-		System.out.println(x);
+		System.out.println("num : " + num);
+		System.out.println("typeof(num) : " + ((Double) num).getClass().getName());
+		System.out.println("x : " + x);
+		System.out.println("typeof(x) : " + ((Integer) x).getClass().getName() + "\n");
 		
 		//캐스팅 타입 생략 : 묵시적 형변환
 		long y=data;
-		System.out.println(y);
+		System.out.println("data : " + data);
+		System.out.println("typeof(data) : " + ((Integer) data).getClass().getName());
+		System.out.println("y : " + y);
+		System.out.println("typeof(y) : " + ((Long) y).getClass().getName());
 		
 		/*
 		 * 유니코드
