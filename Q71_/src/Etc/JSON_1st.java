@@ -14,13 +14,13 @@ public class JSON_1st {
 		JSONObject objRawJSON = (JSONObject) parser.parse(new FileReader("c:\\\\temp\\\\ko_wiki_v1_squad.json"));
 		// init
 		
-		// JSON¿¡¼­ µ¥ÀÌÅÍ¸¦ ÃßÃâÇÏ´Â ¹æ½Ä
+		// JSONï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Í¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½
 //		String txtCreator = (String) objRawJSON.get("creator");
 //		System.out.println(txtCreator);
 //		String txtVer = (String) objRawJSON.get("version");
-//		System.out.println(txtVer);
+//		System.out.println(txtVer); 
 
-		// Start : JSON µ¥ÀÌÅÍ ÃßÃâ
+		// Start : JSON ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 		JSONArray objArrData = (JSONArray) objRawJSON.get("data");	// Data [Arr]
 		JSONObject objData = null; // data [Arr]
 		JSONArray objarrParagraphs = null; // paragraphs [Arr]
@@ -50,7 +50,7 @@ public class JSON_1st {
 			longAnswer_start = (Long) objAnswers.get("answer_start"); // answer_start 
 			strText = (String) objAnswers.get("text"); // text
 
-			// Áß°£ È®ÀÎ
+			// ï¿½ß°ï¿½ È®ï¿½ï¿½
 //			System.out.println(strQuestion);
 //			System.out.println(longAnswer_start);
 //			System.out.println(strText);
@@ -63,9 +63,9 @@ public class JSON_1st {
 			
 //			System.out.println(objArrExtract);
 		}
-		// End : JSON µ¥ÀÌÅÍ ÃßÃâ
+		// End : JSON ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 		
-		// Start : JSON ÆÄÀÏ ±¸¼º
+		// Start : JSON ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 		try{
 			FileWriter exFile = new FileWriter("c:\\temp\\extracted.json");
 			exFile.write(objArrExtract.toJSONString());

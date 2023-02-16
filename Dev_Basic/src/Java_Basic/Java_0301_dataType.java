@@ -16,7 +16,7 @@
  */
 package Java_Basic;
 
-public class Java_0301_dataType {
+public class Java_0301_dataType { 
 
 	//현재 프로그램을 실행할때 제일 먼저 호출되는 메소드 이다.
 	public static void main(String[] args) {
