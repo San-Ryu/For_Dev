@@ -16,6 +16,6 @@ import java.io.InputStreamReader;
 public class Java_0202_Input_BufferedReader_02 {
 	public static void main(String args[]) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-
+		
 	}
 }

@@ -1,6 +1,6 @@
 package Java_Basic;
 
-public class Java0502_statement {
+public class Java_0502_ControlStatement_Case {
 
 	public static void main(String[] args) {
 		// ½Ä : short, int, char, byte, String(7), enum(7)
