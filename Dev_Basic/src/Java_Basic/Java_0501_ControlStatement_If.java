@@ -15,7 +15,7 @@
  */
 package Java_Basic;
 
-public class Java0501_statement {
+public class Java_0501_ControlStatement_If {
 
 	public static void main(String[] args) {
 		int num=6;
